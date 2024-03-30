@@ -1,14 +1,19 @@
-/* eslint-disable import/no-extraneous-dependencies */
-import { sign } from 'jsonwebtoken';
+// eslint-disable-next-line import/no-extraneous-dependencies
+const jwt = require('jsonwebtoken');
 
+// Usually I keep the token between 5 minutes - 15 minutes
 function generateAccessToken(user) {
-  return sign({ userId: user.id }, process.env.JWT_ACCESS_SECRET, {
-    expiresIn: '15m',
+  return jwt.sign({ userId: user.id }, process.env.JWT_ACCESS_SECRET, {
+    expiresIn: '5m',
   });
 }
 
+// I choosed 8h because i prefer to make the user login again each day.
+// But keep him logged in if he is using the app.
+// You can change this value depending on your app logic.
+// I would go for a maximum of 7 days, and make him login again after 7 days of inactivity.
 function generateRefreshToken(user, jti) {
-  return sign(
+  return jwt.sign(
     {
       userId: user.id,
       jti,
@@ -30,7 +35,7 @@ function generateTokens(user, jti) {
   };
 }
 
-export default {
+module.exports = {
   generateAccessToken,
   generateRefreshToken,
   generateTokens,

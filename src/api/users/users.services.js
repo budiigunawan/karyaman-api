@@ -1,6 +1,6 @@
-/* eslint-disable import/no-extraneous-dependencies */
-import bcrypt from 'bcrypt';
-import db from '../../utils/db';
+// eslint-disable-next-line import/no-extraneous-dependencies
+const bcrypt = require('bcrypt');
+const { db } = require('../../utils/db');
 
 function findUserByEmail(email) {
   return db.user.findUnique({
@@ -13,7 +13,10 @@ function findUserByEmail(email) {
 function createUserByEmailAndPassword(user) {
   user.password = bcrypt.hashSync(user.password, 12);
   return db.user.create({
-    data: user,
+    data: {
+      email: user.email,
+      password: user.password,
+    },
   });
 }
 
@@ -25,4 +28,8 @@ function findUserById(id) {
   });
 }
 
-export default { findUserByEmail, createUserByEmailAndPassword, findUserById };
+module.exports = {
+  findUserByEmail,
+  findUserById,
+  createUserByEmailAndPassword,
+};
