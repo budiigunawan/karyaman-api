@@ -6,6 +6,7 @@ const {
   findAttendancesByUserId,
   countAttendances,
   countAttendancesByUserId,
+  updateAttendanceById,
 } = require('./attendance.services');
 const { findUserById } = require('../users/users.services');
 
@@ -52,6 +53,25 @@ router.get('/list', isAuthenticated, async (req, res, next) => {
     }
 
     res.json({ totalData, totalPage, data: attendances });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.put('/edit/:id', isAuthenticated, async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { clockOut, pointOut, imgOut } = req.body;
+    const updatedAttendance = await updateAttendanceById(id, {
+      clockOut,
+      pointOut,
+      imgOut,
+    });
+
+    res.json({
+      message: 'Attendance updated successfully',
+      data: updatedAttendance,
+    });
   } catch (err) {
     next(err);
   }

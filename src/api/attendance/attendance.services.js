@@ -60,10 +60,18 @@ function findAttendances(page, limit) {
   });
 }
 
+function updateAttendanceById(id, newData) {
+  return db.attendance.update({
+    where: { id },
+    data: newData,
+  });
+}
+
 module.exports = {
   createAttendance,
   findAttendancesByUserId,
   findAttendances,
   countAttendancesByUserId,
   countAttendances,
+  updateAttendanceById,
 };
