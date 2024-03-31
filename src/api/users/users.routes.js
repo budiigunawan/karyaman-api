@@ -92,6 +92,19 @@ router.get('/list', isAuthenticated, async (req, res, next) => {
   }
 });
 
+router.get('/details/:id', isAuthenticated, async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const user = await findUserById(id);
+    delete user.password;
+    res.json({
+      data: user,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.put('/edit/:id', isAuthenticated, async (req, res, next) => {
   try {
     const { userId } = req.payload;

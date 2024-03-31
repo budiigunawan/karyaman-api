@@ -25,6 +25,9 @@ function findUserById(id) {
     where: {
       id,
     },
+    include: {
+      role: true,
+    },
   });
 }
 
