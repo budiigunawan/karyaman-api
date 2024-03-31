@@ -55,8 +55,18 @@ function createUser(user) {
   });
 }
 
-function findUsers() {
-  return db.user.findMany();
+function countUsers() {
+  return db.user.count();
+}
+
+function findUsers(page, limit) {
+  const take = Number(limit);
+  const skip = (page - 1) * limit;
+
+  return db.user.findMany({
+    take,
+    skip,
+  });
 }
 
 module.exports = {
@@ -64,5 +74,6 @@ module.exports = {
   findUserById,
   createUserByEmailAndPassword,
   createUser,
+  countUsers,
   findUsers,
 };

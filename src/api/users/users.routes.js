@@ -1,6 +1,11 @@
 const express = require('express');
 const { isAuthenticated } = require('../middlewares');
-const { findUserById, createUser, findUsers } = require('./users.services');
+const {
+  findUserById,
+  createUser,
+  countUsers,
+  findUsers,
+} = require('./users.services');
 
 const router = express.Router();
 
@@ -53,7 +58,7 @@ router.post('/create', isAuthenticated, async (req, res, next) => {
   }
 });
 
-router.get('/all', isAuthenticated, async (req, res, next) => {
+router.get('/list', isAuthenticated, async (req, res, next) => {
   try {
     const { userId } = req.payload;
     const user = await findUserById(userId);
@@ -63,8 +68,13 @@ router.get('/all', isAuthenticated, async (req, res, next) => {
       throw new Error('You dont have access');
     }
 
-    const users = await findUsers();
-    res.json({ data: users.length, users });
+    const { page = 1, limit = 10 } = req.query;
+
+    const users = await findUsers(page, limit);
+    const totalData = await countUsers();
+    const totalPage = Math.ceil(totalData / limit);
+
+    res.json({ totalData, totalPage, data: users });
   } catch (err) {
     next(err);
   }
