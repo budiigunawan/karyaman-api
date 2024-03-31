@@ -6,6 +6,7 @@ const {
   countUsers,
   findUsers,
   updateUserById,
+  deleteUserById,
 } = require('./users.services');
 
 const router = express.Router();
@@ -121,6 +122,27 @@ router.put('/edit/:id', isAuthenticated, async (req, res, next) => {
     res.json({
       message: 'User updated successfully',
       data: updatedUser,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.delete('/delete/:id', isAuthenticated, async (req, res, next) => {
+  try {
+    const { userId } = req.payload;
+    const user = await findUserById(userId);
+
+    if (!user.isAdmin) {
+      res.status(403);
+      throw new Error('You dont have access');
+    }
+
+    const { id } = req.params;
+
+    await deleteUserById(id);
+    res.json({
+      message: 'User deleted successfully',
     });
   } catch (err) {
     next(err);

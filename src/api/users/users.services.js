@@ -85,6 +85,12 @@ function updateUserById(id, newData) {
   });
 }
 
+function deleteUserById(id) {
+  return db.user.delete({
+    where: { id },
+  });
+}
+
 module.exports = {
   findUserByEmail,
   findUserById,
@@ -93,4 +99,5 @@ module.exports = {
   countUsers,
   findUsers,
   updateUserById,
+  deleteUserById,
 };
