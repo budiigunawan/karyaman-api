@@ -52,6 +52,9 @@ function createUser(user) {
       employed,
       roleId,
     },
+    include: {
+      role: true,
+    },
   });
 }
 
@@ -76,6 +79,9 @@ function updateUserById(id, newData) {
   return db.user.update({
     where: { id },
     data: newData,
+    include: {
+      role: true,
+    },
   });
 }
 
