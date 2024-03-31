@@ -28,8 +28,36 @@ function findUserById(id) {
   });
 }
 
+function createUser(user) {
+  user.password = bcrypt.hashSync(user.password, 12);
+  const {
+    email,
+    password,
+    fullName,
+    phone,
+    isAdmin,
+    isActive,
+    employed,
+    roleId,
+  } = user;
+
+  return db.user.create({
+    data: {
+      email,
+      password,
+      fullName,
+      phone,
+      isAdmin,
+      isActive,
+      employed,
+      roleId,
+    },
+  });
+}
+
 module.exports = {
   findUserByEmail,
   findUserById,
   createUserByEmailAndPassword,
+  createUser,
 };
