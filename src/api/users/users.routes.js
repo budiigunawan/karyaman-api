@@ -5,6 +5,7 @@ const {
   createUser,
   countUsers,
   findUsers,
+  updateUserById,
 } = require('./users.services');
 
 const router = express.Router();
@@ -14,7 +15,9 @@ router.get('/profile', isAuthenticated, async (req, res, next) => {
     const { userId } = req.payload;
     const user = await findUserById(userId);
     delete user.password;
-    res.json(user);
+    res.json({
+      data: user,
+    });
   } catch (err) {
     next(err);
   }
@@ -52,7 +55,11 @@ router.post('/create', isAuthenticated, async (req, res, next) => {
       roleId,
     });
 
-    res.json(newUser);
+    delete newUser.password;
+    res.json({
+      message: 'User created successfully',
+      data: newUser,
+    });
   } catch (err) {
     next(err);
   }
@@ -74,7 +81,47 @@ router.get('/list', isAuthenticated, async (req, res, next) => {
     const totalData = await countUsers();
     const totalPage = Math.ceil(totalData / limit);
 
+    users.forEach((u) => {
+      delete u.password;
+    });
+
     res.json({ totalData, totalPage, data: users });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.put('/edit/:id', isAuthenticated, async (req, res, next) => {
+  try {
+    const { userId } = req.payload;
+    const user = await findUserById(userId);
+
+    if (!user.isAdmin) {
+      res.status(403);
+      throw new Error('You dont have access');
+    }
+
+    const { id } = req.params;
+
+    // eslint-disable-next-line object-curly-newline, operator-linebreak
+    const { email, fullName, phone, isAdmin, isActive, employed, roleId } =
+      req.body;
+
+    const updatedUser = await updateUserById(id, {
+      email,
+      fullName,
+      phone,
+      isAdmin,
+      isActive,
+      employed,
+      roleId,
+    });
+
+    delete updatedUser.password;
+    res.json({
+      message: 'User updated successfully',
+      data: updatedUser,
+    });
   } catch (err) {
     next(err);
   }

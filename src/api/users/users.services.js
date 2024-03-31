@@ -72,6 +72,13 @@ function findUsers(page, limit) {
   });
 }
 
+function updateUserById(id, newData) {
+  return db.user.update({
+    where: { id },
+    data: newData,
+  });
+}
+
 module.exports = {
   findUserByEmail,
   findUserById,
@@ -79,4 +86,5 @@ module.exports = {
   createUser,
   countUsers,
   findUsers,
+  updateUserById,
 };
