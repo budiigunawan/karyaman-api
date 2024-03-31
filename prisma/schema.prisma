@@ -47,13 +47,13 @@ model Role {
 }
 
 model Attendance {
-  id       String   @id @unique @default(uuid())
-  clockIn  DateTime
-  clockOut DateTime
+  id       String    @id @unique @default(uuid())
+  clockIn  DateTime  @default(now())
+  clockOut DateTime?
   pointIn  String
-  pointOut String
+  pointOut String?
   imgIn    String
-  imgOut   String
-  user     User     @relation(fields: [userId], references: [id])
+  imgOut   String?
+  user     User      @relation(fields: [userId], references: [id])
   userId   String
 }
