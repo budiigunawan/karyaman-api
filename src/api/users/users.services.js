@@ -66,6 +66,9 @@ function findUsers(page, limit) {
   return db.user.findMany({
     take,
     skip,
+    include: {
+      role: true,
+    },
   });
 }
 
