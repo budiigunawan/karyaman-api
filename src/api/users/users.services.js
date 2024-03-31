@@ -55,9 +55,14 @@ function createUser(user) {
   });
 }
 
+function findUsers() {
+  return db.user.findMany();
+}
+
 module.exports = {
   findUserByEmail,
   findUserById,
   createUserByEmailAndPassword,
   createUser,
+  findUsers,
 };
